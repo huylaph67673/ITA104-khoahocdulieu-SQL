@@ -1,0 +1,91 @@
+(106, 3, 1, 15000),
+
+(107, 4, 10, 5000),
+(107, 5, 1, 25000),
+
+(108, 6, 2, 35000),
+(108, 7, 1, 18000);
+
+
+
+
+
+select
+    od.invoice_id,
+    p.ten_san_pham,
+    od.so_luong,
+    od.don_gia
+from order_detail_2 od
+inner join product_2 p 
+    on od.product_id = p.product_id;
+
+
+select
+    c.ten_khach_hang,
+    i.invoice_id
+from customer_2 c
+left join invoice_2 i 
+    on c.customer_id = i.customer_id;
+	
+select 
+    p.ten_san_pham,
+    od.invoice_id
+from order_detail_2 od
+right join product_2 p
+    on od.product_id = p.product_id;
+
+select 
+    ten_khach_hang as ContactName,
+    so_dien_thoai as PhoneNumber
+from customer_2
+
+union
+
+select
+    supplier_name,
+    so_dien_thoai
+from supplier_2;
+
+
+select 
+    ten_san_pham,
+    don_gia
+from product_2
+where supplier_id in (
+   select supplier_id
+    from supplier_2
+   where supplier_name = 'Vinamilk'
+);
+
+
+select
+    ten_san_pham,
+    don_gia,
+    (select avg (don_gia)from product_2) as gia_trung_binh
+from product_2;
+
+
+
+
+select *
+from (
+   select
+        invoice_id,
+       sum(so_luong * don_gia) as tong_tien
+    from order_detail_2
+    group by invoice_id
+) as temp
+where  tong_tien > 50000;
+
+
+
+
+
+
+select supplier_name
+from supplier_2 s
+where exists (
+    select 1
+    from product_2 p
+    where p.supplier_id = s.supplier_id
+);
